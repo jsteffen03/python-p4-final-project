@@ -56,3 +56,4 @@ __pycache__
 # ingore instances and migrations file
 /server/instance
 /server/migrations
+/Pipefile.lock
