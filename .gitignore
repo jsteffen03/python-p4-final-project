@@ -53,5 +53,6 @@ jspm_packages
 .pytest_cache
 
 __pycache__
+
 /server/instance
 /server/migrations
