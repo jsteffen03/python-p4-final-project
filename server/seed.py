@@ -1,4 +1,4 @@
-from app import app
+from config import app
 from models import db, Furniture, Project, User
 
 with app.app_context():
@@ -6,11 +6,8 @@ with app.app_context():
     # This will delete any existing rows
     # so you can run the seed file multiple times without having duplicate entries in your database
     print("Deleting data...")
-    Furniture.query.delete()
-    Project.query.delete()
-    User.query.delete()
-    
 
+    
     print("Creating furniture...")
     table1 = Furniture(name="Casmera Coffee Table", type="table", price=208, img="https://assets.wfcdn.com/im/96315560/resize-h755-w755%5Ecompr-r85/2643/264375396/Casmera+Coffee+Table.jpg")
     table2 = Furniture(name="Rahn Dining Table", type="table", price=220, img="https://assets.wfcdn.com/im/43494966/resize-h755-w755%5Ecompr-r85/2678/267823513/Rahn+Dining+Table.jpg")
@@ -85,16 +82,11 @@ with app.app_context():
     
     furnitures = [table1,table2,table3,table4,table5,table6,table7,table8,table9,table10,chair1,chair2,chair3,chair4,chair5,chair6,chair7,chair8,chair9,chair10,sofa1,sofa2,sofa3,sofa4,sofa5,sofa6,sofa7,sofa8,sofa9,sofa10,carpet1,carpet2,carpet3,carpet4,carpet5,carpet6,carpet7,carpet8,carpet9,carpet10,shelving1,shelving2,shelving3,shelving4,shelving5,shelving6,shelving7,shelving8,shelving9,shelving10,misc1,misc2,misc3,misc4,misc5,misc6,misc7,misc8,misc9,misc10,lighting1,lighting2,lighting3,lighting4,lighting5,lighting6,lighting7,lighting8,lighting9,lighting10]
 
-
-    user1= User(name="nancy", username="pantz", password="meow123", id="1")
-
-    users= [user1]
+    user1= User(name="nancy", username="pantz", password_hash="meow123")
 
     project1= Project(title="living room", budget=10000, description="This is for my living room", user_id=1)
 
-    projects =[project1]
-
     db.session.add_all(furnitures)
-    db.session.add_all(users)
-    db.session.add_all(projects)
+    db.session.add(user1)
+    db.session.add(project1)
     db.session.commit()

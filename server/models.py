@@ -1,9 +1,9 @@
-
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy_serializer import SerializerMixin
 from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
+
 
 project_furniture_table = db.Table('project_furniture',
     db.Column('project_id', db.Integer, db.ForeignKey('projects.id'), primary_key=True),
@@ -11,13 +11,16 @@ project_furniture_table = db.Table('project_furniture',
 )
 
 class User(db.Model, SerializerMixin):
-
     __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)
+    _password_hash = db.Column(db.String)
 
-    projects = db.relationship('Projects', back_populates='user', cascade="all, delete-orphan")
+    projects = db.relationship('Project', back_populates='user', cascade="all, delete-orphan")
+
+    serialize_rules = ('-projects.user','-_password_hash')
 
     @hybrid_property
     def password_hash(self):
@@ -41,7 +44,7 @@ class Project(db.Model, SerializerMixin):
     
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    user = db.relationship('Users', backpopulates='projects')
+    user = db.relationship('User', back_populates='projects')
     
     furniture = db.relationship('Furniture', secondary=project_furniture_table, back_populates='projects')
 
@@ -70,15 +73,16 @@ class Project(db.Model, SerializerMixin):
         
 class Furniture(db.Model, SerializerMixin):
     __tablename__ = 'furniture'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer)
-    image = db.Column(db.String)
+    img = db.Column(db.String)
     type = db.Column(db.String)
 
-    projects = db.relationship('Projects', secondary=project_furniture_table, back_populates='furniture')
+    projects = db.relationship('Project', secondary=project_furniture_table, back_populates='furniture')
 
-    serialize_rules = ('-projects.furniture',)
+    serialize_rules = ('-project.furniture',)
 
     @validates('name')
     def validate_name(self, key, name):
@@ -94,10 +98,10 @@ class Furniture(db.Model, SerializerMixin):
         else:
             raise ValueError('Price must be greater than 0')
         
-    @validates('image')
-    def validate_image(self, key, image):
-        if "http" in image:
-            return image
+    @validates('img')
+    def validate_image(self, key, img):
+        if "http" in img:
+            return img
         else:
             raise ValueError('Image must be a valid URL')
         
