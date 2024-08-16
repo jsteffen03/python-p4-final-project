@@ -11,17 +11,19 @@ import ProjectCard from './ProjectCard'
 
 function Userpage (){
 
+    const navigate = useNavigate()
+
     return (
         <div>
             <h3>InteriYOUR Design</h3>
             <h2>Welcome User</h2>
-            <Button color='black' onClick={(e)=>console.log(e)}>Sign Out</Button>
+            <Button color='black' onClick={(e)=>navigate('/')}>Sign Out</Button>
             <ProjectCard/>
             <Form>
-            <h2>Create a New Project</h2> 
+                <h2>Create a New Project</h2> 
                     <FormField>
                         <label>Title</label>
-                        <input type="text" placeholder="Title" ></input>
+                        <input type="text" placeholder="Title"></input>
                     </FormField>
                     <FormField>
                         <label>Budget</label>
@@ -29,9 +31,9 @@ function Userpage (){
                     </FormField>
                     <FormField>
                         <label>Description</label>
-                        <input type="text" placeholder="Description" ></input>
+                        <input type="text" placeholder="Description"></input>
                     </FormField>
-                    <Button color='black' onClick={(e)=>addProject(e)}>Submit</Button>
+                    <Button color='black' onClick={(e)=>console.log(e)}>Submit</Button>
             </Form>
         </div>
     )

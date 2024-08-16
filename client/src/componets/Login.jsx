@@ -24,7 +24,7 @@ function Login(){
                         <label>Project Details</label>
                         <input type="text" placeholder="Password" ></input>
                     </FormField>
-                    <Button color='black' onClick={(e)=>addProject(e)}>Submit</Button>
+                    <Button color='black' onClick={(e)=>navigate('/user')}>Submit</Button>
                 </Form>
                 <h2>Don't Have an Account? Create an account here!</h2>  
                 <Form onSubmit={(e)=>console.log(e)}>
