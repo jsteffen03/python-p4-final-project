@@ -1,12 +1,35 @@
 import { useEffect, useState } from 'react'
-import './assets/App.css'
 import Project from './componets/Project.jsx'
 import Userpage from './componets/Userpage.jsx'
 import Login from './componets/Login.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 
+
+
 function App() {
+
+  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  
+  useEffect(()=>{
+    fetch('/checksessions')
+    .then(r=>{
+      if (r.ok){
+        return r.json()
+      }
+      else{
+        throw new Error
+      }
+    })
+    .then(data => {
+      setUser(data)
+    })
+    .catch(()=>{})
+  },[])
+
+  
 
   return (
     <div className="body2">
@@ -27,7 +50,7 @@ function App() {
   )
 }
 
-export default App
+export default App;
 
     // <>
     //   <div>
