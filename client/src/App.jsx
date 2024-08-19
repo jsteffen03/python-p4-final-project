@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './assets/App.css'
+
 import Project from './componets/Project.jsx'
 import Userpage from './componets/Userpage.jsx'
 import Login from './componets/Login.jsx'
