@@ -15,7 +15,7 @@ function Project(){
     const [filteredFurniture, setFilteredFurniture] = useState([])
     
     useEffect(()=>{
-        fetch("http://127.0.0.1:5555/furniture")
+        fetch("/api/furniture")
         .then(r=>r.json())
         .then(data=>{
             setFurnitureData(data)

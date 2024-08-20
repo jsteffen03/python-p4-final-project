@@ -9,15 +9,22 @@ import { useNavigate } from 'react-router-dom'
 import {Form, Button, FormField} from 'semantic-ui-react'
 import ProjectCard from './ProjectCard'
 
-function Userpage (){
+function Userpage ({user, setUser}) {
 
     const navigate = useNavigate()
+
+    function handleLogout(){
+        fetch('/api/logout',{method:"DELETE"})
+        .then(r=>r.json())
+        .then(data => setUser(undefined))
+        .then(()=>navigate('/'))
+      }
 
     return (
         <div>
             <h3>InteriYOUR Design</h3>
             <h2>Welcome User</h2>
-            <Button color='black' onClick={(e)=>navigate('/')}>Sign Out</Button>
+            <Button color='black' onClick={(e)=>handleLogout(e)}>Sign Out</Button>
             <ProjectCard/>
             <Form>
                 <h2>Create a New Project</h2> 
@@ -33,7 +40,7 @@ function Userpage (){
                         <label>Description</label>
                         <input type="text" placeholder="Description"></input>
                     </FormField>
-                    <Button color='black' onClick={(e)=>console.log(e)}>Submit</Button>
+                    <Button color='black' type='submit'>Submit</Button>
             </Form>
         </div>
     )

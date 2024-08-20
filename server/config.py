@@ -8,9 +8,10 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from flask_bcrypt import Bcrypt
+import os
+from dotenv import load_dotenv
 
-# Local imports
-
+load_dotenv()
 
 # Instantiate app, set attributes
 app = Flask(__name__)
@@ -32,3 +33,6 @@ api = Api(app)
 # Instantiate CORS
 CORS(app)
 bcrypt = Bcrypt(app)
+
+app.secret_key = os.getenv('SECRET_KEY')
+# python -c 'import os; print(os.urandom(24))'

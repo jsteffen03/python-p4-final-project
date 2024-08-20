@@ -6,6 +6,10 @@ with app.app_context():
     # This will delete any existing rows
     # so you can run the seed file multiple times without having duplicate entries in your database
     print("Deleting data...")
+    db.session.query(Furniture).delete()
+    db.session.query(Project).delete()
+    db.session.query(User).delete()
+    db.session.commit()
 
     
     print("Creating furniture...")
