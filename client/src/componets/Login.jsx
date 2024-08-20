@@ -6,7 +6,7 @@ import {Form, Button, FormField} from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'  
 import React, { useState, useEffect } from 'react';
 
-function Login({setUser, user}) {
+function Login({setUser}) {
 
   const navigate = useNavigate()
 
@@ -50,9 +50,9 @@ function Login({setUser, user}) {
       setUser(data)
       navigate('/user')
     })
-    // .catch(data=>{
-    //   alert("Not valid username/password")
-    // })
+    .catch(data=>{
+      alert("Not valid username/password")
+    })
   }
 
   return (

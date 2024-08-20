@@ -5,8 +5,8 @@ import Login from './componets/Login.jsx'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate} from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 
-function App() {
-
+function App(){
+  
   const [user, setUser] = useState(null);
 
   return (
