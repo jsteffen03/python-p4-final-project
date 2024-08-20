@@ -116,11 +116,18 @@ class Login(Resource):
         
 api.add_resource(Login, '/login')
 
+# class Logout(Resource):
+#     def delete(self):
+#         session['user_id'] = None
+#         return {}, 200
+# api.add_resource(Logout,'/logout')
+
 class Logout(Resource):
     def delete(self):
-        session['user_id'] = None
-        return {}
+        session.pop('user_id', None)
+        return {}, 200
 api.add_resource(Logout,'/logout')
+
 
 class Signup(Resource):
     def post(self):
