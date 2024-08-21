@@ -9,6 +9,22 @@ function App(){
   
   const [user, setUser] = useState(null);
 
+  useEffect(()=>{
+    fetch('/api/checksessions')
+    .then(r=>{
+      if (r.ok){
+        return r.json()
+      }
+      else{
+        throw new Error
+      }
+    })
+    .then(data => {
+      setUser(data)
+    })
+    .catch(()=>{})
+  },[])
+
   return (
     <div className="body2">
       <BrowserRouter>

@@ -9,10 +9,12 @@ def check_credentials():
     if request.path not in valid_routes and 'user_id' not in session:
         return {"error": "please login"},401
     else:
+        print(session)
         pass
 
 class UserProjects(Resource):
     def get(self):
+        print(session)
         user_id = session.get('user_id')    
         if user_id:
             user = User.query.get(user_id)  # Query the User object
@@ -25,6 +27,7 @@ class UserProjects(Resource):
             return {"error": "User not logged in"}, 401
 
     def post(self):
+        print(session)
         try:
             user_id = session.get('user_id')
             if not user_id:
@@ -57,7 +60,7 @@ class Users(Resource):
             u = User(
                 name=data["name"],
                 username=data["username"],
-                password=data["password"],
+                password_hash=data["password"],
             )
             db.session.add(u)
             db.session.commit()
@@ -131,17 +134,16 @@ class All_Furniture(Resource):
         except Exception as e:
             print(e)
             return {"error": "Not valid furniture"}, 400
-        
 api.add_resource(All_Furniture,'/furniture')
 
 class Login(Resource):
     def post(self):
         data = request.get_json()
         user = User.query.filter(User.username == data['username']).first()
-        
         if user and user.authenticate(data['password']):
-            if data.get('stayLoggedIn', False):
-                session['user_id'] = user.id 
+            session['stay_logged_in'] = data.get('stayLoggedIn', False)
+            session['user_id'] = user.id 
+            print(session)
             return jsonify(user.to_dict()) 
         else:
             return jsonify({"Error": "Invalid username or password"}), 400
@@ -150,24 +152,9 @@ api.add_resource(Login, '/login')
 
 class Logout(Resource):
     def delete(self):
-        session['user_id'] = None
+        session.clear()
         return {}
 api.add_resource(Logout,'/logout')
-
-class Signup(Resource):
-    def post(self):
-        try:
-            data = request.get_json()
-            user = User( name= data['user'], username = data['username'], password_hash = data['password'])
-            print(user.username)
-            db.session.add(user)
-            db.session.commit()
-            session['user_id'] = user.id
-            return user.to_dict()
-        except Exception as e:
-            print(e)
-            return {"Error":"Can't signup"},400
-api.add_resource(Signup,'/signup')
 
 class SaveSession(Resource):
     def get(self):
@@ -175,6 +162,7 @@ class SaveSession(Resource):
         return {}
     
     def post(self):
+        print(session)
         data = request.get_json()
         session['data'] = data['data']
         print(data)
@@ -185,7 +173,8 @@ api.add_resource(SaveSession,'/session')
 # checks back end to see if we have saved a session
 class CheckSession(Resource):
     def get(self):
-        if session.get('user_id'):
+        print(session)
+        if session.get('stay_logged_in') == True:
             user = User.query.filter(User.id == session.get('user_id')).first()
             return user.to_dict()
         else:

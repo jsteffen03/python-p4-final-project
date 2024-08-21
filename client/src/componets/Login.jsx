@@ -18,22 +18,6 @@ function Login({setUser}) {
   const [cPassword, setCPassword] = useState("");
   const [sLI, setSLI] = useState(false)
 
-  useEffect(()=>{
-    fetch('/api/checksessions')
-    .then(r=>{
-      if (r.ok){
-        return r.json()
-      }
-      else{
-        throw new Error
-      }
-    })
-    .then(data => {
-      setUser(data)
-    })
-    .catch(()=>{})
-  },[])
-
   function handleLogin(e) {
     e.preventDefault();
     fetch("/api/login",{
@@ -70,6 +54,9 @@ function Login({setUser}) {
     .then(r=>r.json())
     .then(data=>{
       alert('User Added! Please Login')
+    })
+    .catch(data=>{
+      alert("Not valid username/password")
     })
   }
 

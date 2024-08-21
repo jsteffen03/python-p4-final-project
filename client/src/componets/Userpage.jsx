@@ -27,6 +27,7 @@ function Userpage ({user, setUser}) {
 
     useEffect(() => {
         if (user) {
+            console.log(user)
             fetch('/api/projects', {
                 method: 'GET',
                 headers: {
