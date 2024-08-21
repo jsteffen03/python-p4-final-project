@@ -1,16 +1,16 @@
 from flask import request, session, jsonify
 from flask_restful import Resource
-from models import Furniture, Project, User
+from models import Furniture, Project, User, project_furniture_table
 from config import app, db, api
 
-@app.before_request
-def check_credentials():
-    valid_routes = ("/checksessions","/login","/signup")
-    if request.path not in valid_routes and 'user_id' not in session:
-        return {"error": "please login"},401
-    else:
-        print("here")
-        pass
+# @app.before_request
+# def check_credentials():
+#     valid_routes = ("/checksessions","/login","/signup")
+#     if request.path not in valid_routes and 'user_id' not in session:
+#         return {"error": "please login"},401
+#     else:
+#         print("here")
+#         pass
 
 class AllProjects(Resource):
     def get(self):
@@ -80,7 +80,7 @@ api.add_resource(OneProject,'/projects/<int:id>')
 
 class All_Furniture(Resource):
     def get(self):
-        
+        print(session)
         af = Furniture.query.all()
         return [furniture.to_dict() for furniture in af]
     
@@ -102,6 +102,77 @@ class All_Furniture(Resource):
         
 api.add_resource(All_Furniture,'/furniture')
 
+
+# Route to add furniture to a project
+class AddFurnitureToProject(Resource):
+    # def get(self):
+    def get(self,id):
+        project = Project.query.filter(Project.id == id).first()
+        if project:
+            return project.to_dict()
+        else:
+            return {
+                "error": "not valid id0"
+            },400
+        # return {"message": "GET request works"}
+    def post(self, id):
+        try:
+            data = request.get_json()
+            furniture_id = data.get("furniture_id")
+
+            project = Project.query.get(id)
+            furniture = Furniture.query.get(furniture_id)
+
+            if project and furniture:
+                if furniture not in project.furniture:
+                    project.furniture.append(furniture)
+                    db.session.commit()
+                    return {"message": "Furniture added to project"}, 201
+                else:
+                    return {"message": "Furniture already in project"}, 400
+            else:
+                return {"error": "Invalid project or furniture ID"}, 400
+        except Exception as e:
+            print(e)
+            return {"error": "An error occurred while adding furniture to project"}, 500
+        
+api.add_resource(AddFurnitureToProject, '/project/<int:id>/add_furniture')
+
+# Route to remove furniture from a project
+class RemoveFurnitureFromProject(Resource):
+
+    def get(self, id):
+        project = Project.query.get(id)
+        if project:
+            return project.to_dict()
+        else:
+            return {
+                "error": "Invalid project ID"
+            }, 400
+
+    def delete(self, id):
+        try:
+            data = request.get_json()
+            furniture_id = data.get("furniture_id")
+
+            project = Project.query.get(id)  # Use the ID from the URL
+            furniture = Furniture.query.get(furniture_id)
+
+            if project and furniture:
+                if furniture in project.furniture:
+                    project.furniture.remove(furniture)
+                    db.session.commit()
+                    return {"message": "Furniture removed from project"}, 200
+                else:
+                    return {"message": "Furniture not found in project"}, 400
+            else:
+                return {"error": "Invalid project or furniture ID"}, 400
+        except Exception as e:
+            print(e)
+            return {"error": "An error occurred while removing furniture from project"}, 500
+
+api.add_resource(RemoveFurnitureFromProject, '/project/<int:id>/remove_furniture')
+
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -116,18 +187,11 @@ class Login(Resource):
         
 api.add_resource(Login, '/login')
 
-# class Logout(Resource):
-#     def delete(self):
-#         session['user_id'] = None
-#         return {}, 200
-# api.add_resource(Logout,'/logout')
-
 class Logout(Resource):
     def delete(self):
-        session.pop('user_id', None)
-        return {}, 200
+        session['user_id'] = None
+        return {}
 api.add_resource(Logout,'/logout')
-
 
 class Signup(Resource):
     def post(self):
