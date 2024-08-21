@@ -12,6 +12,10 @@ function Login({setUser}) {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [nUsername, setNUsername] = useState("");
+  const [nPassword, setNPassword] = useState("");
+  const [cPassword, setCPassword] = useState("");
   const [sLI, setSLI] = useState(false)
 
   useEffect(()=>{
@@ -55,6 +59,35 @@ function Login({setUser}) {
     })
   }
 
+  function handleCreate(newUser){
+    fetch("/api/users",{
+      method:"POST",
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newUser)
+    })
+    .then(r=>r.json())
+    .then(data=>{
+      alert('User Added! Please Login')
+    })
+  }
+
+  function addUser(e){
+    e.preventDefault()
+    if (cPassword === nPassword) {
+      const newUser = {
+          name: name,
+          username: nUsername,
+          password: nPassword
+      };
+      handleCreate(newUser);
+    }
+    else {
+      alert("Passwords do not match");
+    }
+  }
+
   return (
     <div>
       <h1>InteriYOUR Design</h1>
@@ -73,23 +106,23 @@ function Login({setUser}) {
               <Button color='black' type='submit'>Submit</Button>
           </Form>
         <h2>Don't Have an Account? Create an account here!</h2>  
-          <Form onSubmit={(e)=>console.log(e)}>
+          <Form onSubmit={addUser}>
               <h2>Create an Account</h2> 
               <FormField>
                   <label>Name</label>
-                  <input type="text" placeholder="Name" />
+                  <input type="text" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Name" />
               </FormField>
               <FormField>
                   <label>Username</label>
-                  <input type="text" placeholder="Username" />
+                  <input type="text" value={nUsername} onChange={(e)=>setNUsername(e.target.value)} placeholder="Username" />
               </FormField>
               <FormField>
                   <label>Password</label>
-                  <input type="text" placeholder="Password" />
+                  <input type="text" value={nPassword} onChange={(e) =>setNPassword(e.target.value)} placeholder="Password" />
               </FormField>
               <FormField>
                   <label>Confirm Password</label>
-                  <input type="text" placeholder="Confirm Password" />
+                  <input type="text" value={cPassword} onChange={(e) =>setCPassword(e.target.value)} placeholder="Confirm Password" />
               </FormField>
               <Button color='black' >Submit</Button>
           </Form>          

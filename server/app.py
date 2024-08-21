@@ -46,6 +46,27 @@ class UserProjects(Resource):
 
 api.add_resource(UserProjects, '/projects')
 
+class Users(Resource):
+    def get(self):
+        au = User.query.all()
+        return [user.to_dict() for user in au]
+
+    def post(self):
+        try:
+            data = request.get_json()
+            u = User(
+                name=data["name"],
+                username=data["username"],
+                password=data["password"],
+            )
+            db.session.add(u)
+            db.session.commit()
+            return u.to_dict(), 201
+        except Exception as e:
+            print(e)
+            return {"error": "Not valid project"}, 400
+
+api.add_resource(Users, '/users')
 
 class OneProject(Resource):
     def get(self,id):
