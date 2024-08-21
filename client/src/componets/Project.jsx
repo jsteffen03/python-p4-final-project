@@ -12,8 +12,9 @@ import  '../styles.css'
 function Project(){
 
     const [furnitureData, setFurnitureData] = useState([])
-    const [filteredFurniture, setFilteredFurniture] = useState([])
-
+    const [filteredFurniture, setFilteredFurniture] = useState([]) 
+    const [selectedFurniture, setSelectedFurniture] = useState([])
+    const [projectId, setProjectId] = useState(null)
     const navigate = useNavigate()
 
     useEffect(()=>{
@@ -31,6 +32,7 @@ function Project(){
         return <Furniture key={furniture.id} furniture={furniture}/>
     })
 
+    const navigate = useNavigate()
 
     return (
         <div className="container">
@@ -41,7 +43,7 @@ function Project(){
             <div className="Content2">
                 <div className="plants">
                     <Card.Group itemsPerRow={1}>
-                        <FurnitureCard/>
+                        <SelectedFurniture />
                     </Card.Group>
                 </div>
                 <div className="plants">

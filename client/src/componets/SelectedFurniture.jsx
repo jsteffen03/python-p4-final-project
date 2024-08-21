@@ -6,23 +6,47 @@ Child file of Project.jsx
 import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 
-function SelectedFurniture(){
+function SelectedFurniture({furniture, projectId}){
 
     const navigate = useNavigate()
+    function handleClick() {
+        fetch(`api/project/1/remove_furniture`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                project_id: projectId,
+                furniture_id: furniture.id,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+             
+            } else {
+                alert("Failed to remove furniture from project");
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
 
     return (
         <div>
             <Card>
-                <Image alt="uh oh" />
+                <Image alt="uh oh" src={furniture.img}/>
                 <CardContent>
-                    <CardHeader>Furniture Name, THATS in PROJECT</CardHeader>
+                    <CardHeader>{furniture.name}</CardHeader>
                     <CardMeta>
-                        Furniture Price
+                        ${furniture.price}
                     </CardMeta>
                     <CardMeta>
-                        Furniture Type
+                        {furniture.type}
                     </CardMeta>
-                    <Button color='red' onClick={(e)=>navigate('/user/project')}>Remove from Project</Button>
+                    <Button color='green' onClick={(e)=>handleClick(e)}>Remove</Button>
                 </CardContent>
             </Card>    
         </div>
