@@ -5,7 +5,7 @@ furniture cards of furniture data, and new furniture form
 import {React, useState, useEffect, useRef} from "react"
 import { useNavigate } from 'react-router-dom'
 import {Form, Button, FormField, Card} from 'semantic-ui-react'
-import FurnitureCard from './FurnitureCard'
+import FurnitureCard from './SelectedFurniture'
 import Furniture from './Furniture'
 import  '../styles.css'
 
@@ -13,22 +13,24 @@ function Project(){
 
     const [furnitureData, setFurnitureData] = useState([])
     const [filteredFurniture, setFilteredFurniture] = useState([])
-    
+
+    const navigate = useNavigate()
+
     useEffect(()=>{
         fetch("/api/furniture")
         .then(r=>r.json())
         .then(data=>{
+            console.log(data)
             setFurnitureData(data)
             setFilteredFurniture(data)
         })
     }
     ,[])
-
+ 
     const furnitureRender = filteredFurniture.map((furniture)=>{
-        return <Furniture furniture={furniture}/>
+        return <Furniture key={furniture.id} furniture={furniture}/>
     })
 
-    const navigate = useNavigate()
 
     return (
         <div className="container">
