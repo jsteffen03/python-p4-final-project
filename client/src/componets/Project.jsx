@@ -32,8 +32,6 @@ function Project(){
         return <Furniture key={furniture.id} furniture={furniture}/>
     })
 
-    const navigate = useNavigate()
-
     return (
         <div className="container">
             <div className="Header"> 
