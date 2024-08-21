@@ -3,22 +3,19 @@
 import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 
-
-
-function ProjectCard(){
+function ProjectCard({project}){
 
     const navigate = useNavigate()
 
     return (
         <Card>
-            <Image alt="uh oh" />
             <CardContent>
-                <CardHeader>Project Name</CardHeader>
+                <CardHeader>{project.title}</CardHeader>
                 <CardMeta>
-                    Project Budget
+                    {project.budget}
                 </CardMeta>
                 <CardMeta>
-                    Project Description
+                    {project.description}
                 </CardMeta>
                 <Button color='green' onClick={(e)=>navigate('/user/project')}>Edit Project</Button>
             </CardContent>

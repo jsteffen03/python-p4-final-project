@@ -6,7 +6,7 @@ Child file of Project.jsx
 import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 
-function FurnitureCard(){
+function SelectedFurniture(){
 
     const navigate = useNavigate()
 
@@ -29,4 +29,4 @@ function FurnitureCard(){
     )
 }
 
-export default FurnitureCard
+export default SelectedFurniture

@@ -48,7 +48,7 @@ class Project(db.Model, SerializerMixin):
     
     furniture = db.relationship('Furniture', secondary=project_furniture_table, back_populates='projects')
 
-    serialize_rules = ('-user.projects', '-furniture.projects')
+    serialize_rules = ('-user.projects', '-furniture.projects',)
 
     @validates('title')
     def validate_title(self, key, title):

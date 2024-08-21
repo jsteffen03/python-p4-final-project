@@ -9,31 +9,42 @@ def check_credentials():
     if request.path not in valid_routes and 'user_id' not in session:
         return {"error": "please login"},401
     else:
-        print("here")
         pass
 
-class AllProjects(Resource):
+class UserProjects(Resource):
     def get(self):
-        ap = Project.query.all()
-        return [project.to_dict() for project in ap],200
-    
+        user_id = session.get('user_id')    
+        if user_id:
+            user = User.query.get(user_id)  # Query the User object
+            if user:
+                projects = user.projects
+                return [project.to_dict() for project in projects], 200
+            else:
+                return {"error": "User not found"}, 404
+        else:
+            return {"error": "User not logged in"}, 401
+
     def post(self):
         try:
+            user_id = session.get('user_id')
+            if not user_id:
+                return {"error": "User not logged in"}, 401
+
             data = request.get_json()
             p = Project(
                 title=data["title"],
-                budget=data.get("budget"),
-                descriptione=data["description"]
+                budget=data["budget"],
+                description=data["description"],
+                user_id= user_id 
             )
             db.session.add(p)
             db.session.commit()
-            return p.to_dict()
+            return p.to_dict(), 201
         except Exception as e:
             print(e)
-            return {
-                "error": "not valid or projects"
-            },400
-api.add_resource(AllProjects,"/projects")
+            return {"error": "Not valid project"}, 400
+
+api.add_resource(UserProjects, '/projects')
 
 
 class OneProject(Resource):
@@ -80,7 +91,7 @@ api.add_resource(OneProject,'/projects/<int:id>')
 
 class All_Furniture(Resource):
     def get(self):
-        
+        print(session)
         af = Furniture.query.all()
         return [furniture.to_dict() for furniture in af]
     
@@ -153,7 +164,6 @@ api.add_resource(SaveSession,'/session')
 # checks back end to see if we have saved a session
 class CheckSession(Resource):
     def get(self):
-        print("here")
         if session.get('user_id'):
             user = User.query.filter(User.id == session.get('user_id')).first()
             return user.to_dict()
