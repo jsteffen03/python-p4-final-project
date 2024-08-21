@@ -5,15 +5,18 @@ furniture cards of furniture data, and new furniture form
 import {React, useState, useEffect, useRef} from "react"
 import { useNavigate } from 'react-router-dom'
 import {Form, Button, FormField, Card} from 'semantic-ui-react'
-import FurnitureCard from './FurnitureCard'
+import SelectedFurniture from './SelectedFurniture'
 import Furniture from './Furniture'
 import  '../styles.css'
 
 function Project(){
 
     const [furnitureData, setFurnitureData] = useState([])
-    const [filteredFurniture, setFilteredFurniture] = useState([])
-    
+    const [filteredFurniture, setFilteredFurniture] = useState([]) 
+    const [selectedFurniture, setSelectedFurniture] = useState([])
+    const [projectId, setProjectId] = useState(null)
+    const navigate = useNavigate()
+
     useEffect(()=>{
         fetch("/api/furniture")
         .then(r=>r.json())
@@ -23,13 +26,20 @@ function Project(){
         })
     }
     ,[])
-
-    const furnitureRender = filteredFurniture.map((furniture)=>{
-        return <Furniture furniture={furniture}/>
+    const furnitureRender = filteredFurniture.map((furniture) =>{
+        return <Furniture key={furniture.id}  furniture={furniture} projectId={projectId} selectedFurniture={selectedFurniture} setSelectedFurniture={setSelectedFurniture}/>
     })
 
-    const navigate = useNavigate()
+    const selectedfurnitureRender = filteredFurniture.map((furniture)=>{
+        return <SelectedFurniture key={furniture.id} furniture={furniture} projectId={projectId}/>
+    })
 
+    // function handleEdit(e){
+    //     e.preventDefault()
+    //     setProjectId(project.id)
+    //     navigate('/user/project')
+    // }
+    
     return (
         <div className="container">
             <div className="Header"> 
@@ -39,7 +49,7 @@ function Project(){
             <div className="Content2">
                 <div className="plants">
                     <Card.Group itemsPerRow={1}>
-                        <FurnitureCard/>
+                        <SelectedFurniture />
                     </Card.Group>
                 </div>
                 <div className="plants">
