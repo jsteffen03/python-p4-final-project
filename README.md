@@ -186,8 +186,22 @@ Type `tree -L 2` within the `server` folder to confirm the new directory
 structure:
 
 ```console
-.
+.Server
 ├── app.py
+├── config.py
+├── instance
+│   └── app.db
+├── migrations
+│   ├── README
+│   ├── __pycache__
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+├── models.py
+└── seed.py
+.Client
+├── 
 ├── config.py
 ├── instance
 │   └── app.db

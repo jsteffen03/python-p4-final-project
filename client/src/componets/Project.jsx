@@ -109,9 +109,9 @@ function Project({user}) {
                 <h1>Project Page</h1>
                 <div>
                 <h2>Budget: ${budget}</h2>
-                        <h2>Total Price of Selected Furniture: ${totalPrice}</h2>
-                        {totalPrice > budget && <p style={{ color: 'red' }}>Over Budget!</p>}
-                            </div>
+                    <h2>Total Price of Selected Furniture: ${totalPrice}</h2>
+                    {totalPrice > budget && <p style={{ color: 'red' }}>Over Budget!</p>}
+                </div>
                 <Button color='black' onClick={(e)=>navigate('/user')}>Back to Home</Button>
             </div> 
                 <Form onSubmit={(e)=>addItem(e)}>
