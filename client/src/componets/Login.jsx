@@ -4,10 +4,11 @@ Holds code for login page, and login form
 */
 import {Form, Button, FormField} from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'  
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function Login({setUser}) {
 
+  // All needed states for login
   const navigate = useNavigate()
 
   const [username, setUsername] = useState("");
@@ -18,6 +19,7 @@ function Login({setUser}) {
   const [cPassword, setCPassword] = useState("");
   const [sLI, setSLI] = useState(false)
 
+  // Handles login and navigates to user page
   function handleLogin(e) {
     e.preventDefault();
     fetch("/api/login",{
@@ -43,6 +45,7 @@ function Login({setUser}) {
     })
   }
 
+  // Handles creating new user and adding to database
   function handleCreate(newUser){
     fetch("/api/users",{
       method:"POST",
@@ -60,6 +63,7 @@ function Login({setUser}) {
     })
   }
 
+  // Handles adding new user and calls handleCreate
   function addUser(e){
     e.preventDefault()
     if (cPassword === nPassword) {

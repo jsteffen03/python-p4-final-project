@@ -3,15 +3,15 @@ from models import db, Furniture, Project, User, project_furniture_table
 
 with app.app_context():
 
-    # This will delete any existing rows
-    # so you can run the seed file multiple times without having duplicate entries in your database
+    # Delete all data in tables to start from scratch
     print("Deleting data...")
+    db.session.query(project_furniture_table).delete()
     db.session.query(Furniture).delete()
     db.session.query(Project).delete()
     db.session.query(User).delete()
     db.session.commit()
 
-    
+    # adds furniture data
     print("Creating furniture...")
     table1 = Furniture(name="Casmera Coffee Table", type="table", price=208, img="https://assets.wfcdn.com/im/96315560/resize-h755-w755%5Ecompr-r85/2643/264375396/Casmera+Coffee+Table.jpg")
     table2 = Furniture(name="Rahn Dining Table", type="table", price=220, img="https://assets.wfcdn.com/im/43494966/resize-h755-w755%5Ecompr-r85/2678/267823513/Rahn+Dining+Table.jpg")
@@ -85,26 +85,7 @@ with app.app_context():
     lighting10 = Furniture(name="Gracieleigh Metal Table Lamp", type="lighting", price=64, img="https://assets.wfcdn.com/im/48488560/resize-h755-w755%5Ecompr-r85/2500/250077307/Gracieleigh+Metal+Table+Lamp.jpg")
     
     furnitures = [table1,table2,table3,table4,table5,table6,table7,table8,table9,table10,chair1,chair2,chair3,chair4,chair5,chair6,chair7,chair8,chair9,chair10,sofa1,sofa2,sofa3,sofa4,sofa5,sofa6,sofa7,sofa8,sofa9,sofa10,carpet1,carpet2,carpet3,carpet4,carpet5,carpet6,carpet7,carpet8,carpet9,carpet10,shelving1,shelving2,shelving3,shelving4,shelving5,shelving6,shelving7,shelving8,shelving9,shelving10,misc1,misc2,misc3,misc4,misc5,misc6,misc7,misc8,misc9,misc10,lighting1,lighting2,lighting3,lighting4,lighting5,lighting6,lighting7,lighting8,lighting9,lighting10]
-
-    user1= User(name="nancy", username="pantz", password_hash="meow123")
-    user2= User(name="justin", username="pidge", password_hash="maddy123")
-
-    # project_furniture_table1 = project_furniture_table(project_id=1, furniture_id=1)
-    # project_furniture_table2 = project_furniture_table(project_id=2, furniture_id=2)
-    
-
-    project1= Project(title="living room", budget=10000, description="This is for my living room", user_id=1)
-    project2= Project(title="dining room", budget=15000, description="This is for my dining room", user_id=1)
     
     db.session.add_all(furnitures)
-    db.session.add(user1)
-    db.session.add(project1)
-    db.session.add(user2)
-    db.session.add(project2)
-
-    db.session.commit()
-    
-    stmt = project_furniture_table.insert().values(project_id=project1.id, furniture_id=table1.id)
-    db.session.execute(stmt)
     db.session.commit()
     
