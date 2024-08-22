@@ -13,7 +13,7 @@ function Project({user}) {
 
     const navigate = useNavigate()
     const location = useLocation();
-    const { budget: initialBudget, projectId: initialProjectId } = location.state || { budget: 0, projectId: null };
+   
     const [furniture, setFurniture] = useState([]) 
     const [selectedFurniture, setSelectedFurniture] = useState([]) 
     const [name, setName] = useState("")
@@ -21,7 +21,7 @@ function Project({user}) {
     const [type, setType] = useState("")
     const [img, setImg] = useState("")
     const [totalPrice, setTotalPrice] = useState(0)
-    const [budget, setBudget] = useState(initialBudget)
+    const [budget, setBudget] = useState(0)
     const [projectId, setProjectId] = useState(initialProjectId);
 
 
