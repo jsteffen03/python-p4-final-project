@@ -10,7 +10,6 @@ function ProjectCard({project, setProjectId, projectId}){
     function editProject(){
         setProjectId(project.id)
         navigate('/user/project')
-        console.log(projectId)
     }
 
 

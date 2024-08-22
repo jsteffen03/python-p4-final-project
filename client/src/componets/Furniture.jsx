@@ -2,21 +2,13 @@
 */
 
 import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic-ui-react'
-import { useNavigate } from 'react-router-dom'
-import SelectedFurniture from './SelectedFurniture';
 
 function Furniture({furniture, addToProject}){
 
     function addFurniture(e){
         e.preventDefault()
-        const newItem = {
-            name: furniture.name,
-            price: furniture.price,
-            type: furniture.type,
-            img: furniture.img
-        };
         const id = furniture.id
-        addToProject(newItem, id);
+        addToProject(furniture, id);
     }
     
     return (

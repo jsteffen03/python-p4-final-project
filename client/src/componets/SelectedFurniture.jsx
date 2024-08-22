@@ -7,6 +7,7 @@ import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic
 function SelectedFurniture({furniture, projectId, selectedFurniture, setSelectedFurniture}){
 
     function handleClick() {
+        console.log(furniture)
         fetch(`/api/project/${projectId}/remove_furniture`, {
             method: 'DELETE',
             headers: {
@@ -17,7 +18,10 @@ function SelectedFurniture({furniture, projectId, selectedFurniture, setSelected
                 furniture_id: furniture.id,
             }),
         })
-        .then(response => response.json())
+        .then(response => response.json())        
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
         const notRemoved = selectedFurniture.filter(furn=>{
             if(furn.id == furniture.id){
                 return false
@@ -25,9 +29,6 @@ function SelectedFurniture({furniture, projectId, selectedFurniture, setSelected
             return true    
         })
         setSelectedFurniture(notRemoved)
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
     }
 
     return (

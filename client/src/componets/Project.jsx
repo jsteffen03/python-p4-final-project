@@ -2,19 +2,19 @@
 Will hold nessacry components for Project Page, Furniture card list for project, 
 furniture cards of furniture data, and new furniture form 
 */
-import {React, useState, useEffect, useRef} from "react"
+import {React, useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
-import {Form, Button, FormField, Card} from 'semantic-ui-react'
+import {Form, Button, FormField, Card, FormSelect} from 'semantic-ui-react'
 import SelectedFurniture from './SelectedFurniture'
 import Furniture from './Furniture'
 import  '../styles.css'
 
 function Project({projectId, user}) {
 
-    console.log(user.projects[projectId - 1].furniture)
-
     const [furniture, setFurniture] = useState([]) 
-    const [selectedFurniture, setSelectedFurniture] = useState(user.projects[projectId - 1].furniture)
+    const [selectedFurniture, setSelectedFurniture] = useState([])
+    const [filteredFurniture, setFilteredFurniture] = useState([])
+    const [filter, setFilter] = useState("")
     const [name, setName] = useState("")
     const [price, setPrice] = useState("")
     const [type, setType] = useState("")
@@ -26,7 +26,11 @@ function Project({projectId, user}) {
         .then(r=>r.json())
         .then(data=>{
             setFurniture(data)
+            setFilteredFurniture(data)
         })
+        if (user && user.projects && user.projects[projectId - 1]) {
+            setSelectedFurniture(user.projects[projectId - 1].furniture || []);
+        }
     }
     ,[])
     
@@ -67,14 +71,11 @@ function Project({projectId, user}) {
         .then(r=>r.json())
         .then(data=>{
           const newArr = [...furniture,data]
-          console.log(data.id)
-          const newItem = data
-          const id = data.id
-          addToProject(newItem, id)
+          addToProject(data, data.id)
           setFurniture(newArr)
+          setFilteredFurniture(newArr)
         })
     }
-
     function addItem(e){
         e.preventDefault()
         const newFurn = {
@@ -86,7 +87,18 @@ function Project({projectId, user}) {
         addToDatabase(newFurn)
     }
 
-    const furnitureRender = furniture.map((furniture)=>{
+    function handleSearch(e){
+        e.preventDefault()
+        setFilteredFurniture(furniture.filter(furn=>{
+            if(filter === ''){
+                return true
+            }
+            else if(filter == furn.type)
+                return true
+        }))
+    }
+    console.log(selectedFurniture)
+    const furnitureRender = filteredFurniture.map((furniture)=>{
         return <Furniture key={furniture.id} furniture={furniture} addToProject={addToProject}/>
     })
 
@@ -94,12 +106,33 @@ function Project({projectId, user}) {
         return <SelectedFurniture key={furniture.id} furniture={furniture} projectId={projectId} selectedFurniture={selectedFurniture} setSelectedFurniture={setSelectedFurniture}/>
     })
 
+    const options = [ // variable to fill the drop down
+        { key: 'a', text: '--Select--', value: '' },
+        { key: 't', text: 'Table', value: 'table' },
+        { key: 'c1', text: 'Chair', value: 'chair' },
+        { key: 's1', text: 'Sofa', value: 'sofa' },
+        { key: 'c2', text: 'Carpet', value: 'carpet' },
+        { key: 's2', text: 'Shelving', value: 'shelving' },
+        { key: 'm', text: 'Misc', value: 'misc' },
+        { key: 'l', text: 'Lighting', value: 'lighting' }
+    ]
+
     return (
         <div className="container">
             <div className="Header"> 
                 <h1>Project Page</h1>
                 <Button color='black' onClick={(e)=>navigate('/user')}>Back to Home</Button>
             </div> 
+                <Form onSubmit={(e)=>handleSearch(e)}>
+                    <h2>Filter Search</h2> 
+                    <Button color='black' type="submit">Search</Button>
+                    <FormSelect onChange={(e, { value })=>setFilter(value)}
+                        fluid
+                        label='Select Type'
+                        options={options}
+                        placeholder='--Select--'    
+                    />
+                </Form>
                 <Form onSubmit={(e)=>addItem(e)}>
                     <h3>Can't find what you are looking for? Add one Here!</h3> 
                     <FormField>

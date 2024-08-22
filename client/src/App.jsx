@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Project from './componets/Project.jsx'
 import Userpage from './componets/Userpage.jsx'
 import Login from './componets/Login.jsx'
-import { BrowserRouter, Routes, Route, Navigate, useNavigate} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 
 function App(){
@@ -22,7 +22,6 @@ function App(){
     })
     .then(data => {
       setUser(data)
-      // console.log(user.projects[projectId - 1].furniture)
     })
     .catch(()=>{})
   },[])
