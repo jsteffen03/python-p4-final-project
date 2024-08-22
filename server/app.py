@@ -5,7 +5,7 @@ from config import app, db, api
 
 @app.before_request
 def check_credentials():
-    valid_routes = ("/checksessions","/login","/signup")
+    valid_routes = ("/checksessions","/login", "/users")
     if request.path not in valid_routes and 'user_id' not in session:
         return {"error": "please login"},401
     else:
@@ -32,7 +32,6 @@ class UserProjects(Resource):
             user_id = session.get('user_id')
             if not user_id:
                 return {"error": "User not logged in"}, 401
-
             data = request.get_json()
             p = Project(
                 title=data["title"],
@@ -55,6 +54,7 @@ class Users(Resource):
         return [user.to_dict() for user in au]
 
     def post(self):
+        print("Here")
         try:
             data = request.get_json()
             u = User(
@@ -67,7 +67,8 @@ class Users(Resource):
             return u.to_dict(), 201
         except Exception as e:
             print(e)
-            return {"error": "Not valid project"}, 400
+            print("Here")
+            return {"error": "Not valid user"}, 400
 
 api.add_resource(Users, '/users')
 
@@ -112,27 +113,6 @@ class OneProject(Resource):
             },400
 
 api.add_resource(OneProject,'/projects/<int:id>')
-
-class addFurniture(Resource):
-    def post(self):
-        try:
-            user_id = session.get('user_id')
-            if not user_id:
-                return {"error": "User not logged in"}, 401
-
-            data = request.get_json()
-            f = Furniture(
-                name=data["name"],
-                price=data["price"],
-                img=data["img"],
-                type=data["type"]
-            )
-            db.session.add(p)
-            db.session.commit()
-            return p.to_dict(), 201
-        except Exception as e:
-            print(e)
-            return {"error": "Not valid project"}, 400
 
 class All_Furniture(Resource):
     def get(self):
@@ -202,7 +182,7 @@ class RemoveFurnitureFromProject(Resource):
 
             project = Project.query.get(id)  # Use the ID from the URL
             furniture = Furniture.query.get(furniture_id)
-
+            print(furniture, project)
             if project and furniture:
                 if furniture in project.furniture:
                     project.furniture.remove(furniture)
