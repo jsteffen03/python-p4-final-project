@@ -3,14 +3,17 @@ Will hold nessacry components for Project Page, Furniture card list for project,
 furniture cards of furniture data, and new furniture form 
 */
 import {React, useState, useEffect, useRef} from "react"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {Form, Button, FormField, Card} from 'semantic-ui-react'
 import SelectedFurniture from './SelectedFurniture'
 import Furniture from './Furniture'
 import  '../styles.css'
 
-function Project({projectId, user}) {
+function Project({user}) {
 
+    const navigate = useNavigate()
+    const location = useLocation();
+    const { budget: initialBudget, projectId: initialProjectId } = location.state || { budget: 0, projectId: null };
     const [furniture, setFurniture] = useState([]) 
     const [selectedFurniture, setSelectedFurniture] = useState([]) 
     const [name, setName] = useState("")
@@ -18,8 +21,9 @@ function Project({projectId, user}) {
     const [type, setType] = useState("")
     const [img, setImg] = useState("")
     const [totalPrice, setTotalPrice] = useState(0)
-    const [budget, setBudget] = useState(0)
-    const navigate = useNavigate()
+    const [budget, setBudget] = useState(initialBudget)
+    const [projectId, setProjectId] = useState(initialProjectId);
+
 
     useEffect(()=>{
         fetch("/api/furniture")

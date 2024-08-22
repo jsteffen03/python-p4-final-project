@@ -4,11 +4,14 @@ import { useNavigate } from 'react-router-dom'
 function ProjectCard({project, setProjectId, projectId}){
 
     const navigate = useNavigate()
+    const handleEditClick = () => {
+        navigate('/user/project', { state: { budget: project.budget, projectId: project.id } });
+    };
 
-    function editProject(){
-        setProjectId(project.id)
-        navigate('/user/project')
-    }
+    // function editProject(){
+    //     setProjectId(project.id)
+    //     navigate('/user/project')
+    // }
 
 
     return (
@@ -21,7 +24,7 @@ function ProjectCard({project, setProjectId, projectId}){
                 <CardMeta>
                     {project.description}
                 </CardMeta>
-                <Button color='green' onClick={editProject}>Edit Project</Button>
+                <Button color='green' onClick={handleEditClick}>Edit Project</Button>
             </CardContent>
         </Card>
     )
