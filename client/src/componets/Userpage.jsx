@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react'
 import {Form, Button, FormField} from 'semantic-ui-react'
 import ProjectCard from './ProjectCard'
 
-function Userpage ({user, setUser}) {
+function Userpage ({user, setUser, setProjectId, projectId}) {
 
     const [projects, setProjects] = useState([]);
     const [title, setTitle] = useState("");  
@@ -76,7 +76,7 @@ function Userpage ({user, setUser}) {
     }
     
     const projectRender = projects.map((project)=>{
-        return <ProjectCard key={project.id} project={project}/>
+        return <ProjectCard key={project.id} project={project} projectId={projectId} setProjectId={setProjectId}/>
     })
 
     return (

@@ -113,6 +113,27 @@ class OneProject(Resource):
 
 api.add_resource(OneProject,'/projects/<int:id>')
 
+class addFurniture(Resource):
+    def post(self):
+        try:
+            user_id = session.get('user_id')
+            if not user_id:
+                return {"error": "User not logged in"}, 401
+
+            data = request.get_json()
+            f = Furniture(
+                name=data["name"],
+                price=data["price"],
+                img=data["img"],
+                type=data["type"]
+            )
+            db.session.add(p)
+            db.session.commit()
+            return p.to_dict(), 201
+        except Exception as e:
+            print(e)
+            return {"error": "Not valid project"}, 400
+
 class All_Furniture(Resource):
     def get(self):
         print(session)
@@ -174,16 +195,6 @@ api.add_resource(AddFurnitureToProject, '/project/<int:id>/add_furniture')
 
 # Route to remove furniture from a project
 class RemoveFurnitureFromProject(Resource):
-
-    def get(self, id):
-        project = Project.query.get(id)
-        if project:
-            return project.to_dict()
-        else:
-            return {
-                "error": "Invalid project ID"
-            }, 400
-
     def delete(self, id):
         try:
             data = request.get_json()

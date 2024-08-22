@@ -2,15 +2,12 @@
 Card for all the furiture for each project.
 Child file of Project.jsx
 */
-
 import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic-ui-react'
-import { useNavigate } from 'react-router-dom'
 
-function SelectedFurniture({furniture, projectId}){
+function SelectedFurniture({furniture, projectId, selectedFurniture, setSelectedFurniture}){
 
-    const navigate = useNavigate()
     function handleClick() {
-        fetch(`api/project/1/remove_furniture`, {
+        fetch(`/api/project/${projectId}/remove_furniture`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,14 +18,13 @@ function SelectedFurniture({furniture, projectId}){
             }),
         })
         .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                alert(data.message);
-             
-            } else {
-                alert("Failed to remove furniture from project");
+        const notRemoved = selectedFurniture.filter(furn=>{
+            if(furn.id == furniture.id){
+                return false
             }
+            return true    
         })
+        setSelectedFurniture(notRemoved)
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
@@ -37,7 +33,7 @@ function SelectedFurniture({furniture, projectId}){
     return (
         <div>
             <Card>
-                <Image alt="uh oh" src={furniture.img}/>
+            <Image alt="uh oh" src={furniture.img}/>
                 <CardContent>
                     <CardHeader>{furniture.name}</CardHeader>
                     <CardMeta>
@@ -46,7 +42,7 @@ function SelectedFurniture({furniture, projectId}){
                     <CardMeta>
                         {furniture.type}
                     </CardMeta>
-                    <Button color='green' onClick={(e)=>handleClick(e)}>Remove</Button>
+                    <Button color='red' onClick={(e)=>handleClick(e)}>Remove</Button>
                 </CardContent>
             </Card>    
         </div>
