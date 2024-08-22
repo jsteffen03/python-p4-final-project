@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-
+import { useState, useEffect } from 'react'
 import Project from './componets/Project.jsx'
 import Userpage from './componets/Userpage.jsx'
 import Login from './componets/Login.jsx'
@@ -9,6 +8,7 @@ import 'semantic-ui-css/semantic.min.css'
 function App(){
   
   const [user, setUser] = useState(null);
+  const [projectId, setProjectId] = useState("");
 
   useEffect(()=>{
     fetch('/api/checksessions')
@@ -32,8 +32,8 @@ function App(){
         <Routes>
           {user ? (
             <>
-              <Route path="/user" element={<Userpage user={user} setUser={setUser} />} />
-              <Route path="/user/project" element={<Project />} />
+              <Route path="/user" element={<Userpage user={user} setUser={setUser} setProjectId={setProjectId}/>} />
+              <Route path="/user/project" element={<Project projectId={projectId} user={user}/>} />
               <Route path="*" element={<Navigate to="/user" />} /> 
             </>
           ) : (

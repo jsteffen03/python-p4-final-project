@@ -3,14 +3,14 @@ from flask_restful import Resource
 from models import Furniture, Project, User, project_furniture_table
 from config import app, db, api
 
-# @app.before_request
-# def check_credentials():
-#     valid_routes = ("/checksessions","/login","/signup")
-#     if request.path not in valid_routes and 'user_id' not in session:
-#         return {"error": "please login"},401
-#     else:
-#         print(session)
-#         pass
+@app.before_request
+def check_credentials():
+    valid_routes = ("/checksessions","/login", "/users")
+    if request.path not in valid_routes and 'user_id' not in session:
+        return {"error": "please login"},401
+    else:
+        print(session)
+        pass
 
 class UserProjects(Resource):
     def get(self):
@@ -55,6 +55,7 @@ class Users(Resource):
         return [user.to_dict() for user in au]
 
     def post(self):
+        print("Here")
         try:
             data = request.get_json()
             u = User(
@@ -67,7 +68,8 @@ class Users(Resource):
             return u.to_dict(), 201
         except Exception as e:
             print(e)
-            return {"error": "Not valid project"}, 400
+            print("Here")
+            return {"error": "Not valid user"}, 400
 
 api.add_resource(Users, '/users')
 
@@ -174,25 +176,14 @@ api.add_resource(AddFurnitureToProject, '/project/<int:id>/add_furniture')
 
 # Route to remove furniture from a project
 class RemoveFurnitureFromProject(Resource):
-
-    def get(self, id):
-        project = Project.query.get(id)
-        if project:
-            return project.to_dict()
-        else:
-            return {
-                "error": "Invalid project ID"
-            }, 400
-
     def delete(self, id):
         try:
             data = request.get_json()
-            print(f"Received data: {data}") 
             furniture_id = data.get("furniture_id")
 
             project = Project.query.get(id)  # Use the ID from the URL
             furniture = Furniture.query.get(furniture_id)
-            print(furniture in project.furniture)
+
             if project and furniture:
                 if furniture in project.furniture:
                     project.furniture.remove(furniture)
