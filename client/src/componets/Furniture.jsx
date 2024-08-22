@@ -8,33 +8,29 @@ import SelectedFurniture from './SelectedFurniture';
 function Furniture({furniture, projectId, furnitureId, setSelectedFurniture, selectedFurniture}){
 //below is the function to add furniture to filtered furnitre
 
-function handleClick({projectId}) {
-    console.log(projectId)
+function handleClick() {
     fetch(`/api/project/1/add_furniture`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            project_id: projectId,  
-            furniture_id: furniture.id,  
+            project_id: projectId,
+            furniture_id: furniture.id,
         }),
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response bad');
+            throw new Error('Network response was bad');
         }
         return response.json();
     })
-    .then(data=>{
-        const newArr = [...selectedFurniture, data]
-        setSelectedFurniture(newArr)
-    })
     .then(data => {
-        if (data.message) {
-            alert(data.message);
+        if (selectedFurniture && Array.isArray(selectedFurniture)) {
+            const newArr = [...selectedFurniture, furniture];
+            setSelectedFurniture(newArr);
         } else {
-            alert("Failed to add furniture to project");
+            console.error('selectedFurniture is not an array');
         }
     })
     .catch(error => {
