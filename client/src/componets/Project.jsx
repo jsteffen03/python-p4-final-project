@@ -143,11 +143,6 @@ function Project({projectId, user, pBudget}) {
         <div className="container">
             <div className="Header"> 
                 <h1>Project Page</h1>
-                <div>
-                <h2>Budget: ${budget}</h2>
-                    <h2>Total Price of Selected Furniture: ${totalPrice}</h2>
-                    {totalPrice > budget && <p style={{ color: 'red' }}>Over Budget!</p>}
-                </div>
                 <Button color='black' onClick={(e)=>navigate('/user')}>Back to Home</Button>
                 <h2>Budget: ${pBudget}</h2>
                 <h2>Total Price of Selected Furniture: ${totalPrice}</h2>
