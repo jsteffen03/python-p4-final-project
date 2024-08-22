@@ -6,6 +6,7 @@ import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic
 
 function SelectedFurniture({furniture, projectId, selectedFurniture, setSelectedFurniture}){
 
+    // Function to remove furniture from project
     function handleClick() {
         console.log(furniture)
         fetch(`/api/project/${projectId}/remove_furniture`, {

@@ -102,17 +102,21 @@ class OneProject(Resource):
                 "error": "not valid id1"
             },400
         
-    def delete(self,id):
-        project = Project.query.filter(Project.id == id).first()
-        if project:
+    def delete(self, project_id):
+        project = Project.query.get(project_id)
+        if not project:
+            return {"error": "Project not found"}, 404
+        
+        try:
             db.session.delete(project)
             db.session.commit()
-        else:
-            return {
-                "error": "not valid id2"
-            },400
+            return {"message": "Project deleted"}, 200
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            return {"error": "Failed to delete project"}, 500
 
-api.add_resource(OneProject,'/projects/<int:id>')
+api.add_resource(OneProject, '/project/<int:project_id>')
 
 class All_Furniture(Resource):
     def get(self):

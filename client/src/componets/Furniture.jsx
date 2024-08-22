@@ -5,6 +5,7 @@ import { CardMeta, CardHeader, CardContent, Card, Button, Image } from 'semantic
 
 function Furniture({furniture, addToProject}){
 
+    // Function to add furniture to project
     function addFurniture(e){
         e.preventDefault()
         const id = furniture.id

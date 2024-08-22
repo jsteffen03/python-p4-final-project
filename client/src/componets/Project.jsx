@@ -9,8 +9,9 @@ import SelectedFurniture from './SelectedFurniture'
 import Furniture from './Furniture'
 import  '../styles.css'
 
-function Project({projectId, user}) {
+function Project({projectId, user, pBudget}) {
 
+    // All states for Project page
     const [furniture, setFurniture] = useState([]) 
     const [selectedFurniture, setSelectedFurniture] = useState([])
     const [filteredFurniture, setFilteredFurniture] = useState([])
@@ -20,7 +21,9 @@ function Project({projectId, user}) {
     const [type, setType] = useState("")
     const [img, setImg] = useState("")
     const navigate = useNavigate()
+    const [totalPrice, setTotalPrice] = useState(0)
 
+    // Fetch all furniture data and sets selected furniture based on project
     useEffect(()=>{
         fetch("/api/furniture")
         .then(r=>r.json())
@@ -28,12 +31,19 @@ function Project({projectId, user}) {
             setFurniture(data)
             setFilteredFurniture(data)
         })
-        if (user && user.projects && user.projects[projectId - 1]) {
-            setSelectedFurniture(user.projects[projectId - 1].furniture || []);
+        if (user && user.projects) {
+            const selectedProject = user.projects.find(project => project.id === projectId);
+            
+            if (selectedProject) {
+                console.log("Project found");
+                setSelectedFurniture(selectedProject.furniture);
+            } else {
+                console.log("Project not found");
+            }
         }
     }
     ,[])
-    
+    // Function to add furniture to project
     function addToProject(newItem, id) {
         fetch(`/api/project/${projectId}/add_furniture`, {
             method: 'POST',
@@ -60,6 +70,7 @@ function Project({projectId, user}) {
         });
     }
 
+    // furnction to add new furniture from form to database and trigger add to project
     function addToDatabase(newFurn){
         fetch("/api/furniture",{
           method:"POST",
@@ -76,6 +87,7 @@ function Project({projectId, user}) {
           setFilteredFurniture(newArr)
         })
     }
+    // function to add new furniture from form
     function addItem(e){
         e.preventDefault()
         const newFurn = {
@@ -87,6 +99,7 @@ function Project({projectId, user}) {
         addToDatabase(newFurn)
     }
 
+    // function to filter furniture by type
     function handleSearch(e){
         e.preventDefault()
         setFilteredFurniture(furniture.filter(furn=>{
@@ -97,16 +110,25 @@ function Project({projectId, user}) {
                 return true
         }))
     }
-    console.log(selectedFurniture)
+
+    // function to set total price based on selected furniture
+    useEffect(() => {
+        const newTotalPrice = selectedFurniture.reduce((acc, item) => acc + item.price, 0);
+        setTotalPrice(newTotalPrice);
+    }, [selectedFurniture]);
+
+    // renders furniture based on filter
     const furnitureRender = filteredFurniture.map((furniture)=>{
         return <Furniture key={furniture.id} furniture={furniture} addToProject={addToProject}/>
     })
 
+    // renders selected furniture
     const selectedFurnitureRender = selectedFurniture.map((furniture)=>{
         return <SelectedFurniture key={furniture.id} furniture={furniture} projectId={projectId} selectedFurniture={selectedFurniture} setSelectedFurniture={setSelectedFurniture}/>
     })
 
-    const options = [ // variable to fill the drop down
+    // renders form options
+    const options = [ 
         { key: 'a', text: '--Select--', value: '' },
         { key: 't', text: 'Table', value: 'table' },
         { key: 'c1', text: 'Chair', value: 'chair' },
@@ -122,6 +144,9 @@ function Project({projectId, user}) {
             <div className="Header"> 
                 <h1>Project Page</h1>
                 <Button color='black' onClick={(e)=>navigate('/user')}>Back to Home</Button>
+                <h2>Budget: ${pBudget}</h2>
+                <h2>Total Price of Selected Furniture: ${totalPrice}</h2>
+                {totalPrice > pBudget && <p style={{ color: 'red' }}>Over Budget!</p>}
             </div> 
                 <Form onSubmit={(e)=>handleSearch(e)}>
                     <h2>Filter Search</h2> 
@@ -154,7 +179,7 @@ function Project({projectId, user}) {
                     <Button color='black' type='submit'>Add Item</Button>
                 </Form>            
             <div className="Content2">
-                <div className="plants2">
+                <div className="plants2" itemsperrow={2}>
                     <Card.Group>
                         {selectedFurnitureRender}
                     </Card.Group>

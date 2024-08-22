@@ -7,9 +7,12 @@ import 'semantic-ui-css/semantic.min.css'
 
 function App(){
   
+  // States
   const [user, setUser] = useState(null);
   const [projectId, setProjectId] = useState("");
-
+  const [pBudget, setPBudget] = useState("");
+  
+  // Check if user is logged in
   useEffect(()=>{
     fetch('/api/checksessions')
     .then(r=>{
@@ -32,8 +35,8 @@ function App(){
         <Routes>
           {user ? (
             <>
-              <Route path="/user" element={<Userpage user={user} setUser={setUser} setProjectId={setProjectId}/>} />
-              <Route path="/user/project" element={<Project projectId={projectId} user={user}/>} />
+              <Route path="/user" element={<Userpage user={user} setUser={setUser} setProjectId={setProjectId} setPBudget={setPBudget}  pBudget={pBudget}/>} />
+              <Route path="/user/project" element={<Project projectId={projectId} user={user} setPBudget={setPBudget} pBudget={pBudget}/>} />
               <Route path="*" element={<Navigate to="/user" />} /> 
             </>
           ) : (

@@ -10,14 +10,16 @@ import { useState, useEffect } from 'react'
 import {Form, Button, FormField} from 'semantic-ui-react'
 import ProjectCard from './ProjectCard'
 
-function Userpage ({user, setUser, setProjectId, projectId}) {
+function Userpage ({user, setUser, setProjectId, projectId, setPBudget, pBudget}) {
 
+    // States for userpage
     const [projects, setProjects] = useState([]);
     const [title, setTitle] = useState("");  
     const [description, setDescription] = useState("");
     const [budget, setBudget] = useState("");
     const navigate = useNavigate()
 
+    // Function to log user out
     function handleLogout(){
         fetch('/api/logout',{method:"DELETE"})
         .then(r=>r.json())
@@ -25,6 +27,7 @@ function Userpage ({user, setUser, setProjectId, projectId}) {
         .then(()=>navigate('/'))
     }
 
+    // Fetch all project data
     useEffect(() => {
         if (user) {
             console.log(user)
@@ -45,6 +48,7 @@ function Userpage ({user, setUser, setProjectId, projectId}) {
         }
     }, [user]);
 
+    // Function to add new project
     function handleSubmit(newProj){
         fetch("/api/projects",{
           method:"POST",
@@ -60,6 +64,7 @@ function Userpage ({user, setUser, setProjectId, projectId}) {
         })
     }
 
+    // Function to add new project
     function addProject(e){
         e.preventDefault()
         if (user) {
@@ -74,9 +79,10 @@ function Userpage ({user, setUser, setProjectId, projectId}) {
             alert("User not found");
         }
     }
-    
+
+    // Render project cards
     const projectRender = projects.map((project)=>{
-        return <ProjectCard key={project.id} project={project} projectId={projectId} setProjectId={setProjectId}/>
+        return <ProjectCard key={project.id} project={project} projectId={projectId} setProjectId={setProjectId} setPBudget={setPBudget} projects={projects} setProjects={setProjects}/>
     })
 
     return (
